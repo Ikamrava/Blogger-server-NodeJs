@@ -21,7 +21,7 @@ app.listen(process.env.PORT || "8020",()=>{
 
 app.post("/register",(req,res)=>{
   console.log(req.body)
-  const q = "select * from users where email = ? or username = ?"
+  // const q = "select * from users where email = ? or username = ?"
     // db.query(q,[req.body.email,req.body.username],(err,data)=>{
     //     if(err) return res.json(err)
     //     if (data.length) return res.status(409).json("User already exist")
@@ -31,7 +31,7 @@ app.post("/register",(req,res)=>{
 
         const qu = "INSERT INTO users(username,email,password) Values (?,?,?)" 
         const values = [req.body.username,req.body.email,req.body.password]
-        db.query(qu,[values],(err,data)=>{
+        db.query("INSERT INTO users(username,email,password) Values (?,?,?)",[req.body.username,req.body.email,req.body.password],(err,data)=>{
             if (err) console.log(err)
             console.log(data)
             // return res.status(200).json("User has been created")
