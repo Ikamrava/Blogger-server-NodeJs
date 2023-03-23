@@ -6,7 +6,7 @@
     "node": "18.x || 16.x"
   },
   "main": "index.js",
-  "type": "module",
+  "type":"module",
   "scripts": {
     "start": "node index.js",
     "test": "node test.js"
