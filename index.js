@@ -3,14 +3,8 @@ import express from 'express'
 import * as dotenv from 'dotenv' 
 import cors from "cors"
 import mysql from 'mysql'
+import {db} from "./db.js"
 
-export const db = mysql.createConnection({
-    host: "sql8.freesqldatabase.com",
-    port: "3306",
-    user: "sql8606846",
-    password : "hRY3mspJEF",
-    database : "sql8606846"
-})
 
 
 
