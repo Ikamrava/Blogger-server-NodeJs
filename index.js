@@ -21,7 +21,7 @@ app.use(express.json())
 // app.use("/posts",postroutes)
 // app.use("/users",userroutes)
 // app.use("/register",register)
-app.post("/",(req,res)=>{
+app.post("/register",(req,res)=>{
   console.log(req.body)
   // const q = "select * from users where email = ? or username = ?"
   //   db.query(q,[req.body.email,req.body.username],(err,data)=>{
@@ -45,7 +45,7 @@ app.post("/",(req,res)=>{
 
 
 
-app.listen("3080",()=>{
+app.listen(env.process.PORT,()=>{
   console.log("Running on 3080")
 })
 
