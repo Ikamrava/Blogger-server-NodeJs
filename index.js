@@ -15,12 +15,17 @@ import multer from "multer";
 const app = express()
 app.use(express.json())
 dotenv.config()
-app.use(cors())
+app.use(cookieParser());
+
 app.use(cors({
   origin: true,
   optionsSuccessStatus: 200,
   credentials: true,
 }));
+
+app.use("/", authRoutes);
+app.use("/users", userRoutes);
+app.use("/posts", postRoutes);
 
 
 
@@ -30,7 +35,7 @@ app.listen(process.env.PORT || "8020",()=>{
   console.log("Running")
 })
 
-app.use(cookieParser());
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./uploads");
@@ -47,9 +52,7 @@ app.post("/uploads", upload.single("file"), function (req, res) {
   res.status(200).json(file.filename);
 });
 
-app.use("/auth", authRoutes);
-app.use("/users", userRoutes);
-app.use("/posts", postRoutes);
+
 
   
     
