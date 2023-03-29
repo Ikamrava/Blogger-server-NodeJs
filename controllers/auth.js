@@ -29,10 +29,10 @@ export const login = (req,res)=>{
         if(err) return res.json(err)
         if (data.length === 0) return res.status(404).json("User does not exist")
         const ispasswordCorrect = bcrypt.compareSync(req.body.password,data[0].password)
-
         if (!ispasswordCorrect) return res.status(400).json("Wrong username or password")
+
       const token =  jwt.sign({id:data[0].id},"jwtkey")
-      console.log(data[0])
+      
       const {password, ...other} = data[0]
 
       
