@@ -73,27 +73,25 @@ export const getPost = (req,res)=>{
 
 
 export const addPost = (req,res)=>{
-
-    
-
     const title = req.body.title
     const description = req.body.description
     const image = req.body.image
     const cat = req.body.category
     const date = req.body.date
     const token = req.cookies.access_token
+
+    const qu = "INSERT INTO posts(title,description,image,cat,date,uid) Values (?,?,?,?,?,?)" 
+        db.query(qu,[title,description,image,cat,date,userInfo.id],(err,data)=>{
+            if(err) return res.status(403).json(err)
+            return res.json("Post has been created")
+        })
+
     if(!token) return res.status(401).json("Not authentication!")
 
     jwt.verify(token,"jwtkey",(err,userInfo)=>{
         
        if(err) return res.status(403).json("Token is not invalid")
        
-
-       const qu = "INSERT INTO posts(title,description,image,cat,date,uid) Values (?,?,?,?,?,?)" 
-        db.query(qu,[title,description,image,cat,date,userInfo.id],(err,data)=>{
-            if(err) return res.status(403).json(err)
-            return res.json("Post has been created")
-        })
 
     })   
 }
