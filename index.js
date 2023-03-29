@@ -1,4 +1,3 @@
-
 import express from 'express'
 import dotenv from 'dotenv' 
 import cors from "cors"
@@ -8,10 +7,7 @@ import postRoutes from "./routes/posts.js";
 import cookieParser from "cookie-parser";
 import { S3Client , PutObjectCommand} from "@aws-sdk/client-s3"
 import multer from "multer";
-import multerS3 from "multer-s3"
-import { nanoid } from 'nanoid'
-import path from "path"
-
+import crypto from "crypto"
 
 
 
@@ -30,6 +26,8 @@ app.use(cors({
 app.use("/", authRoutes);
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
+
+const randomImageName = ()=> crypto.randomBytes(8).toString("hex")
 
 
 
@@ -54,42 +52,34 @@ const s3 = new S3Client({
  });
 
  app.post("/uploads",upload.single("file"),async (req,res)=>{
-  console.log(req.body)
-  console.log(req.file)
+ 
+
+    const imageName = randomImageName()
   
-  const prams = {
-    Bucket: process.env.BUCKET_NAME,
-    Key: Date.now() + req.file.originalname,
-    Bodu: req.file.buffer,
-    ContentType: req.file.mimetype
+    const prams = {
+      Bucket: process.env.BUCKET_NAME,
+      Key:  imageName ,
+      Body: req.file.buffer,
+      ContentType: req.file.mimetype
+  
+    }
 
-  }
+    
+  
 
-  const command = new PutObjectCommand(prams)
+    const command = new PutObjectCommand(prams)
+  
+    await s3.send(command )
+   
+    res.status(200).json(imageName);
+  
 
-  await s3.send(command )
-  const file = req.file;
-  res.status(200).json(Date.now() + file.originalname);
 
 
  })
 
 
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "./uploads");
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, Date.now() + file.originalname);
-//   },
-// });
 
-// const upload = multer({ storage });
-
-// app.post("/uploads", upload.single("file"), function (req, res) {
-//   const file = req.file;
-//   res.status(200).json(file.filename);
-// });
 
 
 

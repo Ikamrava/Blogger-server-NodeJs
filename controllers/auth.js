@@ -17,7 +17,6 @@ export const register = (req,res)=>{
               const qu = "INSERT INTO users(username,password,email) Values (?,?,?)" 
               db.query(qu,[req.body.username,hash,req.body.email],(err,data)=>{
                   if (err) console.log(err)
-                  console.log(data)
                   return res.status(200).json("User has been created")
               })
           
