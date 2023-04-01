@@ -73,44 +73,50 @@ export const getPost = (req,res)=>{
 
 
 export const addPost = (req,res)=>{
+    
     const title = req.body.title
     const description = req.body.description
     const image = req.body.image
     const cat = req.body.category
     const date = req.body.date
     const token = req.cookies.access_token
+    const userID = req.body.uid
+
+    const qu = "INSERT INTO posts(title,description,image,cat,date,uid) Values (?,?,?,?,?,?)" 
+    db.query(qu,[title,description,image,cat,date,userID],(err,data)=>{
+        if(err) return res.status(403).json(err)
+        return res.json("Post has been created")
+    })
 
     
 
-    if(!token) return res.status(401).json("Not authentication!")
+    // if(!token) return res.status(401).json("Not authentication!")
 
-    jwt.verify(token,"jwtkey",(err,userInfo)=>{
+    // jwt.verify(token,"jwtkey",(err,userInfo)=>{
         
-       if(err) return res.status(403).json("Token is not invalid")
-       const qu = "INSERT INTO posts(title,description,image,cat,date,uid) Values (?,?,?,?,?,?)" 
-        db.query(qu,[title,description,image,cat,date,userInfo.id],(err,data)=>{
-            if(err) return res.status(403).json(err)
-            return res.json("Post has been created")
-        })
+    //    if(err) return res.status(403).json("Token is not invalid")
+      
 
-    })   
+    // })   
 }
 
 
 export const deletePost = (req,res)=>{
-    const token = req.cookies.access_token
-   
-    if(!token) return res.status(401).json("Not authentication!")
-    jwt.verify(token,"jwtkey",(err,userInfo)=>{
-       if(err) return res.status(403).json("Token is not invalid")
-       const postId = req.params.id
-       const q = "Delete from posts where id = ? and uid = ?"
-       db.query(q,[postId,userInfo.id],(err,data)=>{
+    
+
+    const postId = req.params.id
+       const q = "Delete from posts where id = ?"
+       db.query(q,[postId],(err,data)=>{
         if(err) return res.status(403).json("You can only delet your posts")
         return res.json("Post Has been deleted")
 
        })
-    })
+   
+    // if(!token) return res.status(401).json("Not authentication!")
+    // jwt.verify(token,"jwtkey",(err,userInfo)=>{
+    //    if(err) return res.status(403).json("Token is not invalid")
+       
+    // })
     
 
 }
@@ -125,14 +131,7 @@ export const updatePost = (req,res)=>{
     const postId = req.params.id
     const token = req.cookies.access_token
     const userId = req.body.uid
-
-
     
-
-    if(!token) return res.status(401).json("Not authentication!")
-
-    jwt.verify(token,"jwtkey",(err,userInfo)=>{
-       if(err) return res.status(403).json("Token is not invalid")
 
     const qu = "UPDATE posts SET title =?, description=?,image=?,cat=?,date=? where id = ? AND uid = ? " 
     db.query(qu,[title,description,image,category,date,postId,userId],(err,data)=>{
@@ -140,5 +139,14 @@ export const updatePost = (req,res)=>{
         return res.json("Post has been updated")
     })
 
-    })   
+
+    
+
+    // if(!token) return res.status(401).json("Not authentication!")
+
+    // jwt.verify(token,"jwtkey",(err,userInfo)=>{
+    //    if(err) return res.status(403).json("Token is not invalid")
+
+
+    // })   
 }
